@@ -10,7 +10,13 @@ axum = "0.6.20"
 chrono = { version = "0.4.31", features = ["serde"] }
 dotenv = "0.15.0"
 hyper = { version = "1.0.1", features = ["full"] }
-redis = { version = "0.23.3", features = ["aio", "tokio-comp", "tokio-rustls-comp", "json"] }
+redis = { version = "0.23.3", features = [
+    "aio",
+    "tokio-comp",
+    "tokio-rustls-comp",
+    "json",
+    "tls-rustls-webpki-roots",
+] }
 redis-macros = "0.2.1"
 serde = { version = "1.0.193", features = ["derive"] }
 serde_json = "1.0.108"

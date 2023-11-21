@@ -32,7 +32,7 @@ async fn main() {
         .route("/todos/:id", delete(delete_todo).patch(update_todo))
         .with_state(redis_conn);
 
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
     tracing::debug!("listening on {}", addr);
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
