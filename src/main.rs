@@ -9,6 +9,7 @@ use redis_macros::{FromRedisValue, ToRedisArgs};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::{collections::HashMap, net::SocketAddr};
+use tower_http::cors::CorsLayer;
 use ulid::Ulid;
 
 #[tokio::main]
@@ -30,6 +31,7 @@ async fn main() {
     let app = Router::new()
         .route("/todos", get(list_todos).post(create_todo))
         .route("/todos/:id", delete(delete_todo).patch(update_todo))
+        .layer(CorsLayer::permissive())
         .with_state(redis_conn);
 
     let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
@@ -59,6 +61,7 @@ async fn list_todos(
 
 #[derive(Serialize, Deserialize)]
 struct CreateTodo {
+    id: String,
     task: String,
 }
 
@@ -73,10 +76,8 @@ async fn create_todo(
             .unwrap();
     }
 
-    let id = Ulid::new().to_string();
-
     let todo = Todo {
-        id,
+        id: payload.id,
         task: payload.task,
         created_at: chrono::Utc::now(),
         completed: false,
